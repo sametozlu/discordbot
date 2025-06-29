@@ -1,10 +1,25 @@
-import random
+import discord
 
-def gen_pass(pass_length):
-    elements = "+-/*!&$#?=@<>"
-    password = ""
-    for i in range(pass_length):
-        password += random.choice(elements)
-    return password
+intents = discord.Intents.default()
+intents.message_content = True
 
-print(gen_pass(100))
+client = discord.Client(intents=intents)
+
+@client.event
+async def on_ready():
+    print(f'{client.user} olarak giriş yaptık')
+
+@client.event
+async def on_message(message):
+    if message.author == client.user:
+        return
+    if message.content.startswith('$hello'):
+        await message.channel.send(f'Merhaba {client.user}! ben bir botum!')
+    elif  message.content.startswith('$heh'):
+        if len(message.content) > 4:
+            count_heh = int(message.content[4:])
+        else:
+            count_heh = 5
+        await message.channel.send("he" * count_heh)
+        
+client.run("-----")
